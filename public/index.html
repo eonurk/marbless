@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Game</title>
+    <style>
+        pre {
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Word Game</h1>
+    <pre id="matrix"></pre>
+    <input type="text" id="wordInput" placeholder="Enter a word">
+    <button onclick="submitWord()">Submit</button>
+    <script>
+        function updateMatrix() {
+            fetch('/updated-matrix')
+                .then(response => response.json())
+                .then(matrix => {
+                    const matrixText = matrix.join('\n');
+                    document.getElementById('matrix').textContent = matrixText;
+                })
+                .catch(error => {
+                    console.error('Error updating matrix:', error);
+                });
+        }
+
+        function submitWord() {
+            const word = document.getElementById('wordInput').value;
+            if (word) {
+                fetch(`/submit-word?word=${word}`)
+                .then(response => {
+                        if (response.ok) {
+                            document.getElementById('errorMessage').textContent = '';
+                            updateMatrix();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error submitting word:', error);
+                    });
+            }
+        }
+
+        // Update the matrix initially
+        updateMatrix();
+    </script>
+</body>
+</html>
