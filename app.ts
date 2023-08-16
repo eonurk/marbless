@@ -58,6 +58,16 @@ function playGame() {
     });
     
     // Add a new endpoint to send the updated matrix as JSON
+    app.get('/restart-game', (req, res) => {
+        
+        const matrix = initialMatrix;
+        score = 0
+
+        res.json(matrix);
+        res.json(score);
+    });
+
+    // Add a new endpoint to send the updated matrix as JSON
     app.get('/updated-matrix', (req, res) => {
         const sanitizedMatrix = matrix.map(row => row.join(' '));
         res.json(sanitizedMatrix);
@@ -86,7 +96,7 @@ function playGame() {
             }
             return false;
         });
-        
+
         // Check if the submitted word can be formed using the letters of the last row
         if (isValidWord) {
             // Valid word: Update matrix, calculate score, etc.

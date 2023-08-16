@@ -18,6 +18,7 @@
     <h1 id= "errorMessage"></h1>
     <input type="text" id="wordInput" placeholder="Enter a word">
     <button onclick="submitWord()">Submit</button>
+    <button onclick="restart()">Restart</button>
     <script>
         function updateMatrix() {
             fetch('/updated-matrix')
@@ -40,6 +41,24 @@
                 .catch(error => {
                     console.error('Error updating matrix:', error);
                 });
+        }
+
+        function restart() {
+            fetch('/restart-game')
+            .then(response => {
+                console.log('Response status:', response.status); // Debug log
+                if (response.ok) {
+                    document.getElementById('errorMessage').textContent = '';
+                    updateMatrix();
+                    updateScore();
+                } else {
+                    response.text().then(errorMessage => {
+                        console.log('Word submission error:', errorMessage); // Debug log
+                        document.getElementById('errorMessage').textContent = errorMessage;
+                    });
+                }
+                
+            })
         }
 
         function submitWord() {

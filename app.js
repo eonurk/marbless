@@ -58,6 +58,13 @@ function playGame() {
         res.render('index', { matrix: sanitizedMatrix });
     });
     // Add a new endpoint to send the updated matrix as JSON
+    app.get('/restart-game', function (req, res) {
+        var matrix = initialMatrix;
+        score = 0;
+        res.json(matrix);
+        res.json(score);
+    });
+    // Add a new endpoint to send the updated matrix as JSON
     app.get('/updated-matrix', function (req, res) {
         var sanitizedMatrix = matrix.map(function (row) { return row.join(' '); });
         res.json(sanitizedMatrix);
