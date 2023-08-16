@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Game</title>
+    <title>Marbless</title>
     <style>
         pre {
             font-family: monospace;
@@ -12,8 +12,10 @@
     </style>
 </head>
 <body>
-    <h1>Word Game</h1>
+    <h1>Marbless</h1>
     <pre id="matrix"></pre>
+    <h2 id= "scoreMessage"></h2>
+    <h1 id= "errorMessage"></h1>
     <input type="text" id="wordInput" placeholder="Enter a word">
     <button onclick="submitWord()">Submit</button>
     <script>
@@ -29,24 +31,44 @@
                 });
         }
 
+        function updateScore() {
+            fetch('/updated-score')
+                .then(response => response.json())
+                .then(s => {
+                    document.getElementById('scoreMessage').textContent = "Score: " + s;
+                })
+                .catch(error => {
+                    console.error('Error updating matrix:', error);
+                });
+        }
+
         function submitWord() {
+            console.log('Submit button clicked'); // Debug log
             const word = document.getElementById('wordInput').value;
+            console.log('Submitted word:', word); // Debug log
             if (word) {
                 fetch(`/submit-word?word=${word}`)
-                .then(response => {
+                    .then(response => {
+                        console.log('Response status:', response.status); // Debug log
                         if (response.ok) {
+                            console.log('Word submission successful'); // Debug log
                             document.getElementById('errorMessage').textContent = '';
                             updateMatrix();
+                            updateScore();
+                        } else {
+                            response.text().then(errorMessage => {
+                                console.log('Word submission error:', errorMessage); // Debug log
+                                document.getElementById('errorMessage').textContent = errorMessage;
+                            });
                         }
+                        
                     })
-                    .catch(error => {
-                        console.error('Error submitting word:', error);
-                    });
             }
         }
 
         // Update the matrix initially
         updateMatrix();
+        updateScore();
     </script>
 </body>
 </html>

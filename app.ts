@@ -63,20 +63,30 @@ function playGame() {
         res.json(sanitizedMatrix);
     });
 
+    // Add a new endpoint to send the updated matrix as JSON
+    app.get('/updated-score', (req, res) => {
+        res.json(score);
+    });
+
     // Endpoint to handle user-submitted word and update the matrix
     app.get('/submit-word', (req, res) => {
         const userWord = req.query.word as string; // Extract the submitted word
         const sanitizedWord = userWord.trim().toUpperCase();
 
-        if (sanitizedWord.match(/^[A-Z]+$/) && matrix[matrix.length - 1].every(letter => sanitizedWord.includes(letter))) {
+        // Check if the submitted word can be formed using the letters of the last row
+        if (sanitizedWord.split('').every(letter => matrix[matrix.length - 1].includes(letter))) {
             // Valid word: Update matrix, calculate score, etc.
             updateMatrix(matrix, sanitizedWord); // Implement the updateMatrix function
+
+            score += sanitizedWord.length;
+
             // Send a success response back to the client
             res.sendStatus(200);
         } else {
             // Invalid word: Send an error response back to the client
             res.status(400).send('Invalid word');
         }
+
     });
 
     const port = process.env.PORT || 8888;

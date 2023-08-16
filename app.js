@@ -62,13 +62,19 @@ function playGame() {
         var sanitizedMatrix = matrix.map(function (row) { return row.join(' '); });
         res.json(sanitizedMatrix);
     });
+    // Add a new endpoint to send the updated matrix as JSON
+    app.get('/updated-score', function (req, res) {
+        res.json(score);
+    });
     // Endpoint to handle user-submitted word and update the matrix
     app.get('/submit-word', function (req, res) {
         var userWord = req.query.word; // Extract the submitted word
         var sanitizedWord = userWord.trim().toUpperCase();
-        if (sanitizedWord.match(/^[A-Z]+$/) && matrix[matrix.length - 1].every(function (letter) { return sanitizedWord.includes(letter); })) {
+        // Check if the submitted word can be formed using the letters of the last row
+        if (sanitizedWord.split('').every(function (letter) { return matrix[matrix.length - 1].includes(letter); })) {
             // Valid word: Update matrix, calculate score, etc.
             updateMatrix(matrix, sanitizedWord); // Implement the updateMatrix function
+            score += sanitizedWord.length;
             // Send a success response back to the client
             res.sendStatus(200);
         }
