@@ -70,8 +70,20 @@ function playGame() {
     app.get('/submit-word', function (req, res) {
         var userWord = req.query.word; // Extract the submitted word
         var sanitizedWord = userWord.trim().toUpperCase();
+        var lastRowLetters = matrix[matrix.length - 1];
+        // Create a copy of lastRowLetters to track available letters
+        var availableLetters = lastRowLetters.slice();
+        // Check if each letter in the submitted word can be formed using the letters of the last row
+        var isValidWord = sanitizedWord.split('').every(function (letter) {
+            var index = availableLetters.indexOf(letter);
+            if (index !== -1) {
+                availableLetters.splice(index, 1); // Remove the letter from available letters
+                return true;
+            }
+            return false;
+        });
         // Check if the submitted word can be formed using the letters of the last row
-        if (sanitizedWord.split('').every(function (letter) { return matrix[matrix.length - 1].includes(letter); })) {
+        if (isValidWord) {
             // Valid word: Update matrix, calculate score, etc.
             updateMatrix(matrix, sanitizedWord); // Implement the updateMatrix function
             score += sanitizedWord.length;

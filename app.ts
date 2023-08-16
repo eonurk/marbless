@@ -73,8 +73,22 @@ function playGame() {
         const userWord = req.query.word as string; // Extract the submitted word
         const sanitizedWord = userWord.trim().toUpperCase();
 
+        const lastRowLetters = matrix[matrix.length - 1];
+        // Create a copy of lastRowLetters to track available letters
+        const availableLetters = lastRowLetters.slice();
+        
+        // Check if each letter in the submitted word can be formed using the letters of the last row
+        const isValidWord = sanitizedWord.split('').every(letter => {
+            const index = availableLetters.indexOf(letter);
+            if (index !== -1) {
+                availableLetters.splice(index, 1); // Remove the letter from available letters
+                return true;
+            }
+            return false;
+        });
+        
         // Check if the submitted word can be formed using the letters of the last row
-        if (sanitizedWord.split('').every(letter => matrix[matrix.length - 1].includes(letter))) {
+        if (isValidWord) {
             // Valid word: Update matrix, calculate score, etc.
             updateMatrix(matrix, sanitizedWord); // Implement the updateMatrix function
 
