@@ -1,10 +1,15 @@
 import { Application } from 'express';
 import express = require('express');
 import * as path from 'path';
-import * as readline from 'readline';
 
 const app: Application = express();
 
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+app.use("/css",express.static("./node_modules/bootstrap/dist/css"));
+app.use("/js",express.static("./node_modules/bootstrap/dist/js"));
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
 
 // Initialize the matrix
 const initialMatrix: string[][] = [
@@ -35,16 +40,6 @@ function restartMatrix(matrix: string[][]): void {
         }
     }
 }
-
-
-
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-app.use("/css",express.static("./node_modules/bootstrap/dist/css"));
-app.use("/js",express.static("./node_modules/bootstrap/dist/js"));
-
-// Set up EJS as the view engine
-app.set('view engine', 'ejs');
 
 // Main game loop
 function playGame() {
@@ -108,11 +103,7 @@ function playGame() {
             // Invalid word: Send an error response back to the client
             res.status(400).send('Invalid word');
         }
-
     });
-
-
-
 
     const port = process.env.PORT || 8888;
     app.listen(port, () => {

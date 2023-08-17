@@ -12,6 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var path = require("path");
 var app = express();
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+app.use("/css", express.static("./node_modules/bootstrap/dist/css"));
+app.use("/js", express.static("./node_modules/bootstrap/dist/js"));
+// Set up EJS as the view engine
+app.set('view engine', 'ejs');
 // Initialize the matrix
 var initialMatrix = [
     ['A', 'B', 'G', 'C', 'F'],
@@ -40,12 +46,6 @@ function restartMatrix(matrix) {
         }
     }
 }
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-app.use("/css", express.static("./node_modules/bootstrap/dist/css"));
-app.use("/js", express.static("./node_modules/bootstrap/dist/js"));
-// Set up EJS as the view engine
-app.set('view engine', 'ejs');
 // Main game loop
 function playGame() {
     var matrix = initialMatrix.map(function (row) { return __spreadArray([], row, true); }); // Create a copy of the initial matrix

@@ -18,7 +18,7 @@
         </div>
     </div>
     <pre id="matrix"></pre>
-    <p id= "errorMessage"></p>
+    <!-- <p id= "errorMessage"></p> -->
     <input type="text" id="wordInput" placeholder="" autofocus>
     <div class="divButton">
         <button id="submitButton" onclick="submitWord()">Submit</button>
@@ -58,13 +58,13 @@
             .then(response => {
                 console.log('Response status:', response.status); // Debug log
                 if (response.ok) {
-                    document.getElementById('errorMessage').textContent = '';
+                    // document.getElementById('errorMessage').textContent = '';
                     updateMatrix();
                     updateScore();
                 } else {
                     response.text().then(errorMessage => {
                         console.log('Word submission error:', errorMessage); // Debug log
-                        document.getElementById('errorMessage').textContent = errorMessage;
+                        // document.getElementById('errorMessage').textContent = errorMessage;
                     });
                 }
                 
@@ -81,7 +81,7 @@
                         console.log('Response status:', response.status); // Debug log
                         if (response.ok) {
                             console.log('Word submission successful'); // Debug log
-                            document.getElementById('errorMessage').textContent = '';
+                            // document.getElementById('errorMessage').textContent = '';
                             console.log(document.getElementById('wordInput').value);
                             document.getElementById('wordInput').value = '';
                             
@@ -90,7 +90,15 @@
                         } else {
                             response.text().then(errorMessage => {
                                 console.log('Word submission error:', errorMessage); // Debug log
-                                document.getElementById('errorMessage').textContent = errorMessage;
+                                
+                                document.getElementById('wordInput').classList.add("input-error");
+                                // document.getElementById('errorMessage').textContent = errorMessage;
+
+                                const myTimeout = setTimeout(removeShake, 750);
+
+                                function removeShake() {
+                                    document.getElementById('wordInput').classList.remove("input-error")
+                                }
                             });
                         }
                         
@@ -134,7 +142,7 @@
             event.preventDefault();
             // Trigger the button element with a click
             document.getElementById("submitButton").click();
-        }
+        } 
         }); 
 
         // Update the matrix initially

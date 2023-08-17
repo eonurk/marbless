@@ -61,14 +61,34 @@
   #wordInput{
     border: none;
     text-transform: uppercase;
-    border-bottom: 2px solid #ffc107;
+    border-bottom: 3px solid #ffc107;
     height: 50%;
     min-width: 1px;
     outline: none;
     font-family: "Menlo", sans-serif;
-    font-size: xx-large;
+    font-size: 1.2em;
     text-align: center;
     color: #333;
     caret-color: darkgray;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.08em;    
+
+    
+  }
+
+  .input-error {
+    animation: shake 0.33s ease-in-out 0s 2;
+  }
+
+  @keyframes shake {
+    0% { margin-left: 0rem;     margin-right: 0rem;}
+    /* 75% { margin-left: 0.5rem;  margin-right: 0.5rem;} */
+    50% { margin-left: -1rem; margin-right: -1em;}
+    100% { margin-left: 0rem;   margin-right: 0rem;}
+  }
+  @keyframes shake2 {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    50% { transform: rotate(0eg); }
+    75% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
   }
