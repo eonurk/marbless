@@ -51,7 +51,7 @@ function playGame() {
     var matrix = initialMatrix.map(function (row) { return __spreadArray([], row, true); }); // Create a copy of the initial matrix
     var score = 0;
     app.get('/', function (req, res) {
-        var sanitizedMatrix = matrix.map(function (row) { return row.join(' '); }).join('\n');
+        var sanitizedMatrix = matrix.map(function (row) { return row.join('  '); }).join('\n');
         res.render('index', { matrix: sanitizedMatrix });
     });
     // Add a new endpoint to send the updated matrix as JSON
@@ -63,7 +63,7 @@ function playGame() {
     });
     // Add a new endpoint to send the updated matrix as JSON
     app.get('/updated-matrix', function (req, res) {
-        var sanitizedMatrix = matrix.map(function (row) { return row.join(' '); });
+        var sanitizedMatrix = matrix.map(function (row) { return row.join('  '); });
         res.json(sanitizedMatrix);
     });
     // Add a new endpoint to send the updated matrix as JSON
@@ -99,7 +99,7 @@ function playGame() {
             res.status(400).send('Invalid word');
         }
     });
-    var port = process.env.PORT || 8888;
+    var port = process.env.PORT || 8000;
     app.listen(port, function () {
         console.log("Server is listening on port ".concat(port));
     });

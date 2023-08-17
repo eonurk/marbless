@@ -47,7 +47,7 @@ function playGame() {
     let score = 0;
 
     app.get('/', (req, res) => {
-        const sanitizedMatrix = matrix.map(row => row.join(' ')).join('\n');
+        const sanitizedMatrix = matrix.map(row => row.join('  ')).join('\n');
         res.render('index', { matrix: sanitizedMatrix });
     });
     
@@ -63,7 +63,7 @@ function playGame() {
 
     // Add a new endpoint to send the updated matrix as JSON
     app.get('/updated-matrix', (req, res) => {
-        const sanitizedMatrix = matrix.map(row => row.join(' '));
+        const sanitizedMatrix = matrix.map(row => row.join('  '));
         res.json(sanitizedMatrix);
     });
 
@@ -105,7 +105,7 @@ function playGame() {
         }
     });
 
-    const port = process.env.PORT || 8888;
+    const port = process.env.PORT || 8000;
     app.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
     });

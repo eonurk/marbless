@@ -12,7 +12,7 @@
 <body>
     <h1>Marbless</h1>
     <div>
-        <h3 id= "scoreMessage"></h3>
+        <h5 id= "scoreMessage"></h5>
         <div class="progress">
             <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"  aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -131,18 +131,29 @@
             progressBar.setAttribute('aria-valuenow', progress.toString()); // Update the aria-valuenow attribute
         }
 
+        function containsOnlyLetters(str) {
+            return str.match(/[a-z]/i)
+        }
+
+
         // Get the input field
         var input = document.getElementById("wordInput");
 
         // Execute a function when the user presses a key on the keyboard
         input.addEventListener("keypress", function(event) {
-        // If the user presses the "Enter" key on the keyboard
-        if (event.key === "Enter") {
-            // Cancel the default action, if needed
-            event.preventDefault();
-            // Trigger the button element with a click
-            document.getElementById("submitButton").click();
-        } 
+            // If the user presses the "Enter" key on the keyboard
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                document.getElementById("submitButton").click();
+            } else if (containsOnlyLetters(event.key)){
+                
+                // Should update the matrix with every letter.
+
+                // console.log("XXXX")
+                // updateMatrix();
+            }
         }); 
 
         // Update the matrix initially

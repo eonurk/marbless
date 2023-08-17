@@ -24,7 +24,10 @@
     font-size: xx-large;
     font-family: "Menlo", sans-serif;
     height: auto;
-    padding: 20px;
+  }
+
+  pre:last-child{
+    color: #ffc107;
   }
   
 
