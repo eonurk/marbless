@@ -3,23 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="index.css">
     <title>Marbless</title>
-    <style>
-        pre {
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
-    </style>
+    
 </head>
 <body>
     <h1>Marbless</h1>
+    <div>
+        <h3 id= "scoreMessage"></h3>
+        <div class="progress">
+            <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"  aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
     <pre id="matrix"></pre>
-    <h2 id= "scoreMessage"></h2>
-    <h1 id= "errorMessage"></h1>
-    <input type="text" id="wordInput" placeholder="Enter a word">
-    <button onclick="submitWord()">Submit</button>
-    <button onclick="restart()">Restart</button>
+    <p id= "errorMessage"></p>
+    <input type="text" id="wordInput" placeholder="" autofocus>
+    <div class="divButton">
+        <button id="submitButton" onclick="submitWord()">Submit</button>
+        <button class="restart-button" onclick="restart()"></button>
+        <button id="deleteButton" onclick="deleteLetter()">Delete</button>
+    </div>
+
+    <script src="/js/bootstrap.js"></script>
     <script>
+    
         function updateMatrix() {
             fetch('/updated-matrix')
                 .then(response => response.json())
@@ -37,6 +46,7 @@
                 .then(response => response.json())
                 .then(s => {
                     document.getElementById('scoreMessage').textContent = "Score: " + s;
+                    updateProgressBar(s);
                 })
                 .catch(error => {
                     console.error('Error updating matrix:', error);
@@ -72,6 +82,9 @@
                         if (response.ok) {
                             console.log('Word submission successful'); // Debug log
                             document.getElementById('errorMessage').textContent = '';
+                            console.log(document.getElementById('wordInput').value);
+                            document.getElementById('wordInput').value = '';
+                            
                             updateMatrix();
                             updateScore();
                         } else {
@@ -84,6 +97,45 @@
                     })
             }
         }
+
+        function deleteLetter(){
+
+            const inputElement = document.getElementById("wordInput");
+
+            if (inputElement) {
+                const currentValue = inputElement.value;
+                
+                if (currentValue.length > 0) {
+                    const newValue = currentValue.slice(0, -1);
+                    inputElement.value = newValue;
+                }
+            }
+        }
+
+        // Function to update the progress bar
+        function updateProgressBar(progress) {
+
+            console.log("\t\t", progress)
+            // Get a reference to the progress bar element
+            const progressBar = document.querySelector('.progress-bar');
+
+            progressBar.style.width = `${progress}%`; // Set the width of the progress bar
+            progressBar.setAttribute('aria-valuenow', progress.toString()); // Update the aria-valuenow attribute
+        }
+
+        // Get the input field
+        var input = document.getElementById("wordInput");
+
+        // Execute a function when the user presses a key on the keyboard
+        input.addEventListener("keypress", function(event) {
+        // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("submitButton").click();
+        }
+        }); 
 
         // Update the matrix initially
         updateMatrix();

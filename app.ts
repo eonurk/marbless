@@ -1,18 +1,9 @@
 import { Application } from 'express';
-import * as express from 'express';
+import express = require('express');
 import * as path from 'path';
 import * as readline from 'readline';
 
-
 const app: Application = express();
-
-// Function to display the matrix
-function displayMatrix(matrix: string[][]): void {
-    for (const row of matrix) {
-        console.log(row.join(' '));
-    }
-    console.log();
-}
 
 
 // Initialize the matrix
@@ -35,14 +26,22 @@ function updateMatrix(matrix: string[][], word: string): void {
     }
 }
 
-// Create a readline interface for user input
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// Function to update the matrix after a word is formed
+function restartMatrix(matrix: string[][]): void {
+    // Reset the matrix to its original state
+    for (let row = 0; row < matrix.length; row++) {
+        for (let col = 0; col < matrix[row].length; col++) {
+            matrix[row][col] = initialMatrix[row][col];
+        }
+    }
+}
+
+
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/css",express.static("./node_modules/bootstrap/dist/css"));
+app.use("/js",express.static("./node_modules/bootstrap/dist/js"));
 
 // Set up EJS as the view engine
 app.set('view engine', 'ejs');
@@ -60,11 +59,11 @@ function playGame() {
     // Add a new endpoint to send the updated matrix as JSON
     app.get('/restart-game', (req, res) => {
         
-        const matrix = initialMatrix;
+        restartMatrix(matrix);
         score = 0
 
-        res.json(matrix);
-        res.json(score);
+        // Send both matrix and score in a single response
+        res.json({ matrix: matrix, score: score });
     });
 
     // Add a new endpoint to send the updated matrix as JSON
@@ -101,8 +100,7 @@ function playGame() {
         if (isValidWord) {
             // Valid word: Update matrix, calculate score, etc.
             updateMatrix(matrix, sanitizedWord); // Implement the updateMatrix function
-
-            score += sanitizedWord.length;
+            score += sanitizedWord.length * 4; // update score
 
             // Send a success response back to the client
             res.sendStatus(200);
@@ -113,36 +111,13 @@ function playGame() {
 
     });
 
+
+
+
     const port = process.env.PORT || 8888;
     app.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
-        askForWord();
     });
-
-    function askForWord() {
-        displayMatrix(matrix);
-        rl.question("Enter a word using the last row's letters: ", (word) => {
-            const sanitizedWord = word.trim().toUpperCase();
-
-            if (!sanitizedWord.match(/^[A-Z]+$/)) {
-                console.log("Invalid input. Enter a valid word.");
-                askForWord();
-                return;
-            }
-
-            if (sanitizedWord.split('').every(letter => matrix[matrix.length - 1].includes(letter))) {
-                score += sanitizedWord.length;
-                updateMatrix(matrix, sanitizedWord);
-            } else {
-                console.log("Invalid word. Use only letters from the last row.");
-            }
-
-            // Continue playing or end the game based on your own conditions
-            askForWord();
-        });
-    }
-
-    askForWord();
 }
 
 // Start the game

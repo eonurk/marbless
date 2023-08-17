@@ -11,16 +11,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var path = require("path");
-var readline = require("readline");
 var app = express();
-// Function to display the matrix
-function displayMatrix(matrix) {
-    for (var _i = 0, matrix_1 = matrix; _i < matrix_1.length; _i++) {
-        var row = matrix_1[_i];
-        console.log(row.join(' '));
-    }
-    console.log();
-}
 // Initialize the matrix
 var initialMatrix = [
     ['A', 'B', 'G', 'C', 'F'],
@@ -40,13 +31,19 @@ function updateMatrix(matrix, word) {
         matrix[0][colIndex] = ' ';
     }
 }
-// Create a readline interface for user input
-var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// Function to update the matrix after a word is formed
+function restartMatrix(matrix) {
+    // Reset the matrix to its original state
+    for (var row = 0; row < matrix.length; row++) {
+        for (var col = 0; col < matrix[row].length; col++) {
+            matrix[row][col] = initialMatrix[row][col];
+        }
+    }
+}
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/css", express.static("./node_modules/bootstrap/dist/css"));
+app.use("/js", express.static("./node_modules/bootstrap/dist/js"));
 // Set up EJS as the view engine
 app.set('view engine', 'ejs');
 // Main game loop
@@ -59,10 +56,10 @@ function playGame() {
     });
     // Add a new endpoint to send the updated matrix as JSON
     app.get('/restart-game', function (req, res) {
-        var matrix = initialMatrix;
+        restartMatrix(matrix);
         score = 0;
-        res.json(matrix);
-        res.json(score);
+        // Send both matrix and score in a single response
+        res.json({ matrix: matrix, score: score });
     });
     // Add a new endpoint to send the updated matrix as JSON
     app.get('/updated-matrix', function (req, res) {
@@ -93,7 +90,7 @@ function playGame() {
         if (isValidWord) {
             // Valid word: Update matrix, calculate score, etc.
             updateMatrix(matrix, sanitizedWord); // Implement the updateMatrix function
-            score += sanitizedWord.length;
+            score += sanitizedWord.length * 4; // update score
             // Send a success response back to the client
             res.sendStatus(200);
         }
@@ -105,29 +102,7 @@ function playGame() {
     var port = process.env.PORT || 8888;
     app.listen(port, function () {
         console.log("Server is listening on port ".concat(port));
-        askForWord();
     });
-    function askForWord() {
-        displayMatrix(matrix);
-        rl.question("Enter a word using the last row's letters: ", function (word) {
-            var sanitizedWord = word.trim().toUpperCase();
-            if (!sanitizedWord.match(/^[A-Z]+$/)) {
-                console.log("Invalid input. Enter a valid word.");
-                askForWord();
-                return;
-            }
-            if (sanitizedWord.split('').every(function (letter) { return matrix[matrix.length - 1].includes(letter); })) {
-                score += sanitizedWord.length;
-                updateMatrix(matrix, sanitizedWord);
-            }
-            else {
-                console.log("Invalid word. Use only letters from the last row.");
-            }
-            // Continue playing or end the game based on your own conditions
-            askForWord();
-        });
-    }
-    askForWord();
 }
 // Start the game
 playGame();

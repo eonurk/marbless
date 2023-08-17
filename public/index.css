@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Set up the body to fill the viewport and center its content */
+  body {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    text-align: center; 
+    color: #333;
+  }
+  
+  h1 {
+    font-size: 3em;
+  }
+
+  pre{
+    font-size: xx-large;
+    font-family: "Menlo", sans-serif;
+    height: auto;
+    padding: 20px;
+  }
+  
+
+  .divButton {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: center; /* Center the buttons vertically */
+  }
+
+  button {
+      background-color: #fff;
+      font-size: 1em;
+      width: 5.5em;
+      min-width: 5.5em;
+      height: 3em;
+      margin: 0 8px;
+      border: 1px solid #dcdcdc;
+      border-radius: 2.5em;
+      letter-spacing: .01em;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+      cursor: pointer;
+  }
+
+  button.restart-button {
+      background: url("assets/shuffle.svg") center no-repeat;
+      background-size: auto;
+      background-size: 60%;
+      width: 3em;
+      min-width: 3em;
+  }
+
+  #wordInput{
+    border: none;
+    text-transform: uppercase;
+    border-bottom: 2px solid #ffc107;
+    height: 50%;
+    min-width: 1px;
+    outline: none;
+    font-family: "Menlo", sans-serif;
+    font-size: xx-large;
+    text-align: center;
+    color: #333;
+    caret-color: darkgray;
+    letter-spacing: 0.08em;
+  }
